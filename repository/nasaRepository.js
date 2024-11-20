@@ -11,4 +11,18 @@ const fetchMeteorsData = async (startDate, endDate) => {
     return await response.json();
 };
 
-module.exports = { fetchMeteorsData };
+const fetchRoverPhotos = async (userApiKey) => {
+    const useApiKey = userApiKey || apiKey;
+
+    const url = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${useApiKey}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch rover photos');
+    }
+
+    const data = await response.json();
+    return data.photos;
+}
+
+module.exports = { fetchMeteorsData, fetchRoverPhotos };
