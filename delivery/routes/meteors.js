@@ -1,9 +1,11 @@
 const express = require('express');
 const { getMeteors } = require('../../usecases/meteors');
+const validate = require("../../middlewares/validate");
+const meteorSchema = require("../../schemas/meteorSchema");
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', validate(meteorSchema), async (req, res) => {
     try {
         const { date, count, 'were-dangerous-meteors': wereDangerousMeteors } = req.query;
 

@@ -1,9 +1,11 @@
 const express = require('express');
 const { getLatestRoverPhoto } = require('../../usecases/rovers');
+const validate = require("../../middlewares/validate");
+const roverSchema = require("../../schemas/roverSchema");
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', validate(roverSchema), async (req, res) => {
     try {
         const { id, name, API_KEY } = req.body;
 
