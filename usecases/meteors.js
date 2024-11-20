@@ -1,11 +1,20 @@
 const { fetchMeteorsData } = require('../repository/nasaRepository');
 
-const getMeteors = async () => {
-    const data = await fetchMeteorsData();
-    const filteredData = [];
+const getMeteors = async ({ date, count, wereDangerousMeteors }) => {
+    let startDate = '2024-11-11';
+    let endDate = '2024-11-15';
 
-    for (const date in data.near_earth_objects) {
-        data.near_earth_objects[date].forEach(asteroid => {
+    if (date) [startDate, endDate] = date.split(',');
+
+    const data = await fetchMeteorsData(startDate, endDate);
+
+    const filteredData = [];
+    let isDangerousMeteors = false;
+
+    for (const dateKey in data.near_earth_objects) {
+        data.near_earth_objects[dateKey].forEach(asteroid => {
+            if (asteroid.is_potentially_hazardous_asteroid) isDangerousMeteors = true;
+
             filteredData.push({
                 id: asteroid.id,
                 name: asteroid.name,
@@ -16,6 +25,11 @@ const getMeteors = async () => {
             });
         });
     }
+
+    if (count) return { count: filteredData.length };
+
+    if (wereDangerousMeteors) return { wereDangerousMeteors: isDangerousMeteors };
+
     return filteredData;
 };
 

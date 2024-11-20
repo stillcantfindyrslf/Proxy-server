@@ -5,7 +5,10 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const meteors = await getMeteors();
+        const { date, count, 'were-dangerous-meteors': wereDangerousMeteors } = req.query;
+
+        const meteors = await getMeteors({ date, count, wereDangerousMeteors });
+
         res.json(meteors);
     } catch (error) {
         console.error(error);
